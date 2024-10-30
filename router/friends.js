@@ -11,30 +11,67 @@ let friends = {
 
 // GET request: Retrieve all friends
 router.get("/",(req,res)=>{
-
-  // Update the code here
-
-  res.send("Yet to be implemented")//This line is to be replaced with actual return value
+  res.send(JSON.stringify(friends, null, 4));
 });
 
 // GET by specific ID request: Retrieve a single friend with email ID
+// THIS IS WITHOUT FILTER METHOD
 router.get("/:email",(req,res)=>{
-  // Update the code here
-  res.send("Yet to be implemented")//This line is to be replaced with actual return value
+    // Request email
+    const email = req.params.email;
+    
+    // response
+    res.send(friends[email]);
 });
 
 
 // POST request: Add a new friend
 router.post("/",(req,res)=>{
-  // Update the code here
-  res.send("Yet to be implemented")//This line is to be replaced with actual return value
+    // Check if email is provided
+    if (req.params.email){
+        // Create or update friends's details based on provided email
+        friends[req.body.email] = {
+            "firstName": req.params.firstName,
+            "lastName": req.params.lastName,
+            "DOB": req.params.DOB
+        };
+    }
+
+    res.send("The user " + (' ') + (req.body.firstName) + " Has been added.");
+
 });
 
 
 // PUT request: Update the details of a friend with email id
 router.put("/:email", (req, res) => {
-  // Update the code here
-  res.send("Yet to be implemented")//This line is to be replaced with actual return value
+    // Extract email parameter from request URL
+    const email = req.params.email;
+    let friend = friends[email]; // retrieve friend object 
+
+    if (friend){ // check if frend exists
+        let DOB = req.body.DOB;              // Retrieving
+        let firstName = req.body.firstName;  // existing
+        let lastName = req.body.lastName;    // parameters
+
+        // updating existing parameters
+        if (DOB){
+            friend["DOB"] = DOB;
+        }
+        if (firstName){
+            friend["firstName"] = firstName;
+        }
+        if (lastName){
+            friend["lastName"] = lastName;
+        }
+
+        friends[email] = friend; // update friend details
+        res.send(`Friend with the email ${email} updated.`);
+
+    } else {
+        // If not found
+        res.send("Unable to find friend.");
+    }
+
 });
 
 
